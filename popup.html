@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Voice Translator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="glass-card">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo-area">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="logo-icon">
+          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" fill="currentColor"/>
+          <path d="M19 10v1a7 7 0 0 1-14 0v-1"/>
+          <line x1="12" x2="12" y1="19" y2="22"/>
+        </svg>
+        <div class="brand">
+          <h1>Voice Translator</h1>
+          <p class="subtitle">Real-time video translation</p>
+        </div>
+      </div>
+      <label class="switch-container">
+        <input type="checkbox" id="extension-toggle">
+        <span class="slider-round"></span>
+      </label>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content-body">
+
+      <!-- Engine Selector Section -->
+      <section class="section">
+        <h2>Service Mode</h2>
+        <div class="tabs">
+          <button class="tab-btn active" id="tab-free" data-engine="free">Free (Local)</button>
+          <button class="tab-btn" id="tab-premium" data-engine="premium">Premium (APIs)</button>
+        </div>
+      </section>
+
+      <!-- Language Selectors -->
+      <section class="grid-2">
+        <div class="field">
+          <label for="source-lang">Source</label>
+          <select id="source-lang">
+            <option value="en" selected>English</option>
+            <option value="auto">Auto-detect</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="target-lang">Target</label>
+          <select id="target-lang">
+            <option value="es" selected>Spanish</option>
+            <option value="en">English</option>
+            <option value="fr">French</option>
+            <option value="pt">Portuguese</option>
+            <option value="de">German</option>
+            <option value="it">Italian</option>
+            <option value="ja">Japanese</option>
+            <option value="zh">Chinese</option>
+            <option value="ko">Korean</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Free Panel (Web Speech API + Google Translate) -->
+      <div id="panel-free" class="engine-panel">
+        <div class="field">
+          <label for="webspeech-voice">Chrome Local Voice</label>
+          <select id="webspeech-voice">
+            <option value="">Loading voices...</option>
+          </select>
+        </div>
+
+        <section class="grid-2">
+          <div class="field">
+            <div class="label-with-val">
+              <label for="webspeech-rate">Speed</label>
+              <span id="val-rate">1.0x</span>
+            </div>
+            <input type="range" id="webspeech-rate" min="0.5" max="2" step="0.1" value="1.0">
+          </div>
+          <div class="field">
+            <div class="label-with-val">
+              <label for="webspeech-pitch">Pitch</label>
+              <span id="val-pitch">1.0</span>
+            </div>
+            <input type="range" id="webspeech-pitch" min="0.5" max="1.5" step="0.1" value="1.0">
+          </div>
+        </section>
+      </div>
+
+      <!-- Premium Panel (ElevenLabs / OpenAI TTS + GPT translation) -->
+      <div id="panel-premium" class="engine-panel hidden">
+        <div class="field">
+          <label for="tts-engine-select">Premium TTS Engine</label>
+          <select id="tts-engine-select">
+            <option value="openai" selected>OpenAI TTS</option>
+            <option value="elevenlabs">ElevenLabs (Ultra-realistic)</option>
+          </select>
+        </div>
+
+        <!-- OpenAI TTS Voice Options -->
+        <div id="openai-tts-options" class="premium-sub-options">
+          <div class="field">
+            <label for="openai-voice">OpenAI Voice</label>
+            <select id="openai-voice">
+              <option value="alloy" selected>Alloy (Neutral)</option>
+              <option value="echo">Echo (Warm)</option>
+              <option value="fable">Fable (Narrative)</option>
+              <option value="onyx">Onyx (Deep male)</option>
+              <option value="nova">Nova (Bright female)</option>
+              <option value="shimmer">Shimmer (Professional)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- ElevenLabs Voice Options -->
+        <div id="elevenlabs-options" class="premium-sub-options hidden">
+          <div class="field">
+            <label for="elevenlabs-voice-id">ElevenLabs Voice ID</label>
+            <input type="text" id="elevenlabs-voice-id" placeholder="21m00Tcm4TlvDq8ikWAM" value="21m00Tcm4TlvDq8ikWAM">
+          </div>
+        </div>
+
+        <section class="grid-2">
+          <div class="field">
+            <label for="translation-engine-select">Translation via:</label>
+            <select id="translation-engine-select">
+              <option value="mymemory" selected>Google Translate (Free)</option>
+              <option value="openai">OpenAI GPT-4o-mini</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="label-with-val">
+              <label for="premium-volume">Voice Volume</label>
+              <span id="val-premium-volume">100%</span>
+            </div>
+            <input type="range" id="premium-volume" min="10" max="100" step="5" value="100">
+          </div>
+        </section>
+      </div>
+
+      <!-- Fine Tuning (Common) -->
+      <section class="section tuning-section">
+        <div class="field">
+          <div class="label-with-val">
+            <label for="duck-volume">Duck original volume to:</label>
+            <span id="val-duck-volume">15%</span>
+          </div>
+          <input type="range" id="duck-volume" min="0" max="80" step="5" value="15">
+        </div>
+      </section>
+
+      <!-- Collapsible API Keys Section -->
+      <section class="collapsible">
+        <button class="collapsible-trigger" id="api-keys-trigger">
+          <span>API Key Settings</span>
+          <svg class="chevron-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="collapsible-content hidden" id="api-keys-content">
+          <div class="field">
+            <label for="openai-key">OpenAI API Key</label>
+            <div class="password-wrapper">
+              <input type="password" id="openai-key" placeholder="sk-proj-...">
+              <button class="toggle-password" tabindex="-1">👁️</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="elevenlabs-key">ElevenLabs API Key</label>
+            <div class="password-wrapper">
+              <input type="password" id="elevenlabs-key" placeholder="Enter your ElevenLabs key">
+              <button class="toggle-password" tabindex="-1">👁️</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span>v1.0.0 by HOPSiEdev</span>
+      <span>•</span>
+      <a href="https://github.com/HOPSiEdev" target="_blank" class="footer-link">GitHub</a>
+    </footer>
+  </div>
+</body>
+</html>
